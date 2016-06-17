@@ -1,0 +1,178 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+	<title>daziyouxi</title>
+    <link rel="stylesheet" href="./daziyouxi.css">
+</head>
+<style>
+   
+</style>
+<body>
+    <div class="s">
+        <div class="kaishi">
+            <span class="span">Play</span>
+            <input type="radio" id="yiban" checked=checked  name="button">
+            <label for="yiban">
+                <span class="span1 simple selected">Simple</span>
+            </label>
+            <input type="radio" id="kunnan"  name="button">
+            <label for="kunnan">
+                 <span class="span1 difficulty">Difficulty</span>
+            </label>
+        </div>
+    </div>
+	<div class="box"></div>
+    <div class="tishi">
+         <div>提示:你已经吃了<strong class="strong"> 0 </strong>个猪排 </div>
+         <div>你已经错过了<strong class="strongs"> 0 </strong>个猪排</div>
+     </div> 
+    <div class="zanting-box">
+        <h2>吃货,不要走</h2>
+        <span class="span fanhui">继续</span>
+        <span class="span exit">退出</span>
+    </div>
+    <script src="jquery-1.12.0.js"></script>
+</body>
+<script>
+$(function(){
+    var box=document.querySelector(".box");
+    var tishi = document.querySelector('.tishi')
+    var strong = document.querySelector('.strong')
+    var strongs = document.querySelector('.strongs')
+    var success = document.querySelector('.success')
+    var lose = document.querySelector('.lose')
+    var zimujihe={};
+    var nub=2;
+    var time = 30;
+    var s = document.querySelector('.s');
+    var play = document.querySelector('.span');
+    var back = document.querySelector('.fanhui');
+    var exit = document.querySelector('.exit');
+    
+    $(document).on('click',function(){
+        $('.shan').css('display','none')
+        $('.shan1').css('display','none')
+    })
+
+    var paths = new Array();
+    var createzimu=function(){
+        do{
+            var zimu=String.fromCharCode(Math.floor(Math.random()*26+97)).toLowerCase();
+        }while(zimujihe[zimu]);//重复了为真 继续循环   去重
+        paths[0]="../img/b.jpg";
+        paths[1]="../img/f.jpg";
+        paths[2]="../img/g.jpg";
+        paths[3]="../img/h.jpg";
+        var index = Math.floor(Math.random()*4);
+        var divs=document.createElement("div");
+        divs.style.background='url('+paths[index]+')';
+            divs.classList.add("zi")
+        divs.innerHTML=zimu;
+        box.appendChild(divs);
+        divs.style.left=Math.random()*(660-divs.offsetWidth)+"px";
+        var run=Math.ceil(Math.random()*5);
+        zimujihe[zimu]={top:0,yuansu:divs,off:run};
+    }
+    
+    $('.span1').on('click',function(){
+        if( this.classList.contains('simple') ){
+            nub = 2;
+        }else if( this.classList.contains('difficulty') ){
+            nub = 7;
+        }
+        $('.selected').removeClass('selected');
+        $(this).addClass('selected');
+    })
+
+    var removezimu=function(zimu){
+        var i=zimujihe[zimu].yuansu;
+        i.parentElement.removeChild(i);//删除页面中字母
+        delete zimujihe[zimu];//删除数据中的字母
+    }
+    var xiao = 0,
+    xia = 0;
+    document.onkeyup=function(e){
+        if( e.keyCode === 32 ){
+            toggleGame();
+            return;
+        }
+        var key=String.fromCharCode(e.keyCode).toLowerCase();//转化为小写的字母
+        if(zimujihe[key]){
+            xiao += 1;
+            removezimu(key);
+            createzimu();
+            } 
+        strong.innerHTML = xiao;
+    }
+    
+    var timeId;
+    var xx=600;
+    function diao(){
+        var arr=[];
+        for(var i in zimujihe){
+            var data=zimujihe[i];
+            var el=data.yuansu;
+            data.top+=data.off;//自身高度加上随机速度
+            el.style.top=data.top+"px";
+            if(data.top>xx){
+                arr.push(i);
+            }
+        }
+        if(arr.length){
+            for(var i=0;i<arr.length;i++){
+                xia +=1;
+                removezimu(arr[i]);
+                createzimu();
+            }
+            strongs.innerHTML = xia;
+        }   
+    }
+    var zantingbox=document.querySelector(".zanting-box");
+    var toggleGame=function(){
+        if(timeId){
+            clearInterval(timeId);
+            box.style.opacity=0.2;
+            tishi.style.display="none"
+            zantingbox.style.display="block";
+            timeId=null;
+        }else{
+            box.style.opacity=1;
+            timeId=setInterval(diao,time);
+            zantingbox.style.display="none";
+            tishi.style.display="block"
+        }
+    }
+
+    play.addEventListener('click',function(){
+        s.style.display='none';
+        box.style.display='block';
+        tishi.style.display="block"
+        $('.box').children().remove();
+        box.style.opacity=1;
+        timeId=setInterval(diao,time);
+        xiao = 0;
+        xia = 0;
+        strong.innerHTML = xiao;
+        strongs.innerHTML = xia;
+        for(var i=0;i<nub;i++){
+            createzimu();
+        }
+    })
+    back.addEventListener('click',function(){
+        box.style.opacity=1;
+        tishi.style.display="block"
+        timeId=setInterval(diao,time);
+        zantingbox.style.display="none";
+    })
+    $('.exit').on('click',function(){
+        zantingbox.style.display="none";
+        box.style.display='none';
+        s.style.display='block';
+        success.style.display = 'none';
+    })
+})
+    
+
+</script>
+</html>
