@@ -60,10 +60,10 @@ $(function(){
         do{
             var zimu=String.fromCharCode(Math.floor(Math.random()*26+97)).toLowerCase();
         }while(zimujihe[zimu]);//重复了为真 继续循环   去重
-        paths[0]="../img/b.jpg";
-        paths[1]="../img/f.jpg";
-        paths[2]="../img/g.jpg";
-        paths[3]="../img/h.jpg";
+        paths[0]="./img/b.jpg";
+        paths[1]="./img/f.jpg";
+        paths[2]="./img/g.jpg";
+        paths[3]="./img/h.jpg";
         var index = Math.floor(Math.random()*4);
         var divs=document.createElement("div");
         divs.style.background='url('+paths[index]+')';
