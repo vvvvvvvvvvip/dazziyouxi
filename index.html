@@ -5,9 +5,6 @@
 	<title>daziyouxi</title>
     <link rel="stylesheet" href="./index.css">
 </head>
-<style>
-   
-</style>
 <body>
     <div class="s">
         <div class="kaishi">
@@ -33,39 +30,34 @@
         <span class="span exit">退出</span>
     </div>
     <script src="jquery-1.12.0.js"></script>
-</body>
 <script>
 $(function(){
     var box=document.querySelector(".box");
     var tishi = document.querySelector('.tishi')
     var strong = document.querySelector('.strong')
     var strongs = document.querySelector('.strongs')
-    var success = document.querySelector('.success')
-    var lose = document.querySelector('.lose')
+    // var success = document.querySelector('.success')
+    // var lose = document.querySelector('.lose')
     var zimujihe={};
+    var shanchugeshu = [];
     var nub=2;
     var time = 30;
     var s = document.querySelector('.s');
     var play = document.querySelector('.span');
     var back = document.querySelector('.fanhui');
     var exit = document.querySelector('.exit');
-    
-    $(document).on('click',function(){
-        $('.shan').css('display','none')
-        $('.shan1').css('display','none')
-    })
 
     var paths = new Array();
     var createzimu=function(){
         do{
             var zimu=String.fromCharCode(Math.floor(Math.random()*26+97)).toLowerCase();
         }while(zimujihe[zimu]);//重复了为真 继续循环   去重
+        var divs=document.createElement("div");
         paths[0]="./img/b.jpg";
         paths[1]="./img/f.jpg";
         paths[2]="./img/g.jpg";
         paths[3]="./img/h.jpg";
         var index = Math.floor(Math.random()*4);
-        var divs=document.createElement("div");
         divs.style.background='url('+paths[index]+')';
             divs.classList.add("zi")
         divs.innerHTML=zimu;
@@ -85,9 +77,11 @@ $(function(){
         $(this).addClass('selected');
     })
 
-    var removezimu=function(zimu){
+    var removezimu = function(zimu){
         var i=zimujihe[zimu].yuansu;
         i.parentElement.removeChild(i);//删除页面中字母
+        shanchugeshu.push(i);
+        // console.log(zimujihe);
         delete zimujihe[zimu];//删除数据中的字母
     }
     var xiao = 0,
@@ -103,23 +97,31 @@ $(function(){
             removezimu(key);
             createzimu();
             } 
+        console.log(shanchugeshu)
+
         strong.innerHTML = xiao;
     }
     
     var timeId;
-    var xx=600;
+    var xx=660;
     function diao(){
         var arr=[];
-        for(var i in zimujihe){
-            var data=zimujihe[i];
+        for(var x in zimujihe){
+        // console.log(zimujihe)
+
+        //     console.log(x)
+            var data=zimujihe[x];
             var el=data.yuansu;
             data.top+=data.off;//自身高度加上随机速度
             el.style.top=data.top+"px";
             if(data.top>xx){
-                arr.push(i);
+                arr.push(x);
             }
         }
         if(arr.length){
+            console.log(arr)
+            console.log(arr.length)
+
             for(var i=0;i<arr.length;i++){
                 xia +=1;
                 removezimu(arr[i]);
@@ -169,10 +171,11 @@ $(function(){
         zantingbox.style.display="none";
         box.style.display='none';
         s.style.display='block';
-        success.style.display = 'none';
+        // success.style.display = 'none';
     })
 })
     
 
 </script>
+</body>
 </html>
